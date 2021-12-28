@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <form>
+    <div>
+      <input type="file" id="my_files" multiple>
+      <button id="bt" type="button">Submit</button>
+    </div>
+  </form>
+  <br>
+  <label id="upload_label"></label>
+  <div id="upload_div"></div>
+
+  <script>
+    document.getElementById("bt").addEventListener('click', upload_files);
+    var files_len = 0;
+    var uploaded_len = 0;
+    
+    function upload_files() {
+      var files = document.getElementById('my_files').files;
+      files_len = files.length;
+      for (var i = 0; i < files.length; i++) {
+        uploadFile(files[i]);
+        document.getElementById('upload_label').textContent = "uploading...";
+      }
+    }
+
+    function uploadFile(file) {
+      var reader = new FileReader();
+      reader.onload = function() {
+        var reader_result = reader.result;
+        var file_name = file.name
+        google.script.run
+          .withSuccessHandler(uploaded)
+          .upload_file_gs(reader_result, file_name);
+      }
+      reader.readAsDataURL(file);
+    }
+
+    function uploaded(file_url) {
+      create_link(file_url);
+      uploaded_len ++;
+      if(uploaded_len == files_len){
+      document.getElementById('upload_label').textContent = "uploaded";
+      }
+    }
+
+    function create_link(file_url) {
+      var div = document.getElementById("upload_div");
+      var br = document.createElement("br");
+      var link = document.createElement("a");
+      link.textContent = file_url;
+      link.setAttribute("href", file_url);
+      link.setAttribute("target", "_blank");
+      div.appendChild(link);
+      div.appendChild(br);
+    }
+  </script>
+</body>
+</html>
