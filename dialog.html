@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+  </head>
+  <body>
+    <form>
+      <input name="myFile" accept=".csv" type="file">
+      <button onclick="uploadCsv(this.parentNode);">アップロード</button>
+    </form>
+    <script>
+      function uploadCsv(form) {
+        google.script.run.withSuccessHandler(function(){
+          google.script.host.close();
+          alert('アップロードしました');
+        }).withFailureHandler(function(){
+          alert('アップロードに失敗しました');
+        }).uploadCsv(form);
+      }
+      </script>
+  </body>
+</html>
