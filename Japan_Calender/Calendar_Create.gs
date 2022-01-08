@@ -1,18 +1,20 @@
 function Calendar_Function() {
   var sheet  = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Calendar');
   var lastRow = sheet.getLastRow();
-  if(lastRow != 1){
+  if(lastRow != 0){
     var range = sheet.getRange(2,1,lastRow - 1,9);
     range.clearContent();
   };
   var dat = [];
+  var values = new Array("日付","年","月","日","四半期","曜日名","曜日","区分","祝日","国民の祝日・休日名称");
+  dat.push(values);
   var date = new Date();
   var start_date = new Date(date.getFullYear(),0,1);
   var end_date = new Date(date.getFullYear(),11,31);
   var year = start_date.getFullYear();
   const calendar = CalendarApp.getCalendarById('ja.japanese#holiday@group.v.calendar.google.com');
   for(var i = 1 ;start_date.getFullYear() == year ;i++){
-    var values = new Array("日付","年","月","日","四半期","曜日名","曜日","区分","祝日","国民の祝日・休日名称");
+    values = new Array("日付","年","月","日","四半期","曜日名","曜日","区分","祝日","国民の祝日・休日名称");
     values[0] = start_date.getFullYear() + '/' + (start_date.getMonth()+1) + '/' + start_date.getDate();
     values[1] = start_date.getFullYear();
     values[2] = start_date.getMonth()+1;
@@ -36,7 +38,7 @@ function Calendar_Function() {
     dat.push(values);
     start_date.setDate(start_date.getDate() + 1);
   };
-  sheet.getRange(2,1,dat.length,dat[0].length).setValues(dat);
+  sheet.getRange(1,1,dat.length,dat[0].length).setValues(dat);
 }
 function arr_getDay(day){
   var arr_day = new Array('日', '月', '火', '水', '木', '金', '土');
