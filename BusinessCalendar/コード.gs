@@ -20,9 +20,18 @@ function createDateTable() {
 
   let date = new Date();
   let start_date = new Date(date.getFullYear(),0,1);
-
   const year = start_date.getFullYear() + 1;
+  const end_date = new Date(year,0,1);
+  /*
+   祝日はオブジェクトでイベントを一回すべて取得する
+  */
   const calendar = CalendarApp.getCalendarById('ja.japanese#holiday@group.v.calendar.google.com');
+  const list = calendar.getEvents(start_date, end_date);
+  const holidays = list.reduce((acc ,d) => {
+    acc[d.getAllDayStartDate()] = d.getTitle();
+    return acc
+  },{});
+
   let ret;
   let month;
   let j = 0;
@@ -45,12 +54,10 @@ function createDateTable() {
     values[9] = getWeekDay(start_date.getDay()) + '曜日';
     values[10] = getWeekDay(start_date.getDay());
 
-    const events = calendar.getEventsForDay(start_date);
-    if(events.length != 0){
-      values[12] = '祝日';
-      values[13] = events[0].getTitle();
-    };
-
+    if(holidays[start_date.toString()] != null){
+      values[12] = "祝日";
+      values[13] = holidays[start_date.toString()];
+    }
     if (values[10] == '土' || values[10] == '日' || values[12] == '祝日'){
       values[11] = '休日';
     } else {
